@@ -1,28 +1,44 @@
 const CustomError = require("../extensions/custom-error");
 
 module.exports = function transform( arr ) {
-  let transArr = []
-  for( let i = 0; i < arr.length; i++) {
-      switch (arr[i]) {
-          case '--discard-next':
-              i = i + 2
-              break
-          case '--discard-prev':
-              if( i - 1 < 0) break
-              transArr.pop()
-              break
-          case '--double-next':
-              if( i + 1 >= arr.length) break
-              transArr.push(arr[i+1])
-              break
-          case '--double-prev':
-              if( i - 1 < 0) break
-              transArr.push(arr[i-1])
-              break
-          default:
-              transArr.push(arr[i])
-              break
+  const tArr = []
+  const contArr = ['--discard-next', '--double-next', '--double-prev', '--discard-prev']
+  const next = ['--discard-next', '--double-next']
+  const prev = ['--double-prev', '--discard-prev']
+  const disN = '--discard-next'
+  const douN = '--double-next'
+  const disP = '--discard-prev'
+  const douP = '--double-prev'
+  for (let i = 0; i < arr.length; i++) {
+      if (!contArr.includes(arr[i])) {
+
+          if (next.includes(arr[i-1]) && prev.includes(arr[i+1])) {
+
+              if ((arr[i-1] === douN) && (arr[i+1] === douP)) {
+                  tArr.push(arr[i])
+                  tArr.push(arr[i])
+                  tArr.push(arr[i])
+                  continue
+              } else if ((arr[i-1] === douN) && (arr[i+1] === disP)) {
+                  tArr.push(arr[i])
+                  continue
+              } else {
+                  continue
+              }
+
+          } else if (next.includes(arr[i-1]) || prev.includes(arr[i+1])) {
+              if (arr[i-1] === douN || arr[i+1] === douP ) {
+                  tArr.push(arr[i])
+                  tArr.push(arr[i])
+                  continue
+              } else {
+                  continue
+              }
+          } else {
+              tArr.push(arr[i])
+              continue
+          }
       }
   }
-  return transArr
+  return tArr
 }
