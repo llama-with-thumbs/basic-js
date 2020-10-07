@@ -28,7 +28,7 @@ const chainMaker = {
   finishChain() {
       const decor = '( ' + this.chain.join(' )~~( ') + ' )'
       this.clear()
-      console.log('*** ',decor)
+    //   console.log('*** ',decor)
     return decor
   }
 };
